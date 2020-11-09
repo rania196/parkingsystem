@@ -49,9 +49,10 @@ public class TicketDAO {
             //ID, PARKING_NUMBER, VEHICLE_REG_NUMBER, PRICE, IN_TIME, OUT_TIME)
             ps.setString(1,vehicleRegNumber);
             ResultSet rs = ps.executeQuery();
+        	System.out.println(rs);
             if(rs.next()){
                 ticket = new Ticket();
-                ParkingSpot parkingSpot = new ParkingSpot(rs.getInt(1), ParkingType.valueOf(rs.getString(6)),false);
+               ParkingSpot parkingSpot = new ParkingSpot(rs.getInt(1), ParkingType.valueOf(rs.getString(6)),false);
                 ticket.setParkingSpot(parkingSpot);
                 ticket.setId(rs.getInt(2));
                 ticket.setVehicleRegNumber(vehicleRegNumber);
@@ -85,5 +86,23 @@ public class TicketDAO {
             dataBaseConfig.closeConnection(con);
         }
         return false;
+    }
+    public boolean checkIfRecurrentUser(String vehiculeRegNumber) {
+    	 Connection con = null;
+         try {
+             con = dataBaseConfig.getConnection();
+             PreparedStatement ps = con.prepareStatement(DBConstants.GET_COUNT_TICKET);
+             ps.setString(1, vehiculeRegNumber);
+             ResultSet rs = ps.executeQuery();
+             if (rs.next() && rs.getInt(1)> 1) {
+            	 return true;
+             }
+             return false;
+         }catch (Exception ex){
+             logger.error("Error saving ticket info",ex);
+         }finally {
+             dataBaseConfig.closeConnection(con);
+         }
+         return false;
     }
 }

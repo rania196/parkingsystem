@@ -137,7 +137,10 @@ public class FareCalculatorServiceTest {
         ticket.setParkingSpot(parkingSpot);
         ticket.setVehicleRegNumber("AGG6543");
         fareCalculatorService.calculateFare(ticket);
-        assertEquals(Fare.CAR_RATE_PER_HOUR-(Fare.CAR_RATE_PER_HOUR*0.05), ticket.getPrice());
+        TicketDAO ticketdao = new TicketDAO();
+        ticketdao.saveTicket(ticket);
+        assertEquals(Fare.CAR_RATE_PER_HOUR-(Fare.CAR_RATE_PER_HOUR*0.05), ticket.getPrice() );
+        
     }
     @Test
     public void calculateFivePercentFareBikeDiscount(){

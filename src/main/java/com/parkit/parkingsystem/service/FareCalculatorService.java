@@ -40,8 +40,7 @@ public class FareCalculatorService {
 					throw new IllegalArgumentException("Unkown Parking Type");
 			}
 			TicketDAO ticketD = new TicketDAO();
-			Ticket existingTicket = ticketD.getTicket(ticket.getVehicleRegNumber());
-			if (existingTicket != null ) {
+			if (ticketD.checkIfRecurrentUser(ticket.getVehicleRegNumber()) ) {
 				double reducePrice = ticket.getPrice()- (ticket.getPrice()*0.05);
 				ticket.setPrice(reducePrice);
 			}
