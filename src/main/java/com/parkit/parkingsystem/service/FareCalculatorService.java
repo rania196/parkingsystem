@@ -21,7 +21,7 @@ public class FareCalculatorService {
 		// TODO: Some tests are failing here. Need to check if this logic is
 		// correct
 		long duration = outHour - inHour;
-		TimeUnit timeUnitM = TimeUnit.MINUTES; //création d'un objet timeunit qui permé de convertir le temps
+		TimeUnit timeUnitM = TimeUnit.MINUTES; //création d'un objet timeunit qui permet de convertir le temps
 
 		float durationInHours = (float)timeUnitM.convert(duration, TimeUnit.MILLISECONDS) / (float) 60; // convert minutes to hours
 		if (durationInHours <= 0.5) {

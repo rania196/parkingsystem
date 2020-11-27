@@ -19,6 +19,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.omg.CORBA.TCKind;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.when;
@@ -74,6 +75,9 @@ public class ParkingDataBaseIT {
         testParkingACar();
         ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
         parkingService.processExitingVehicle();
+        Ticket ticket = ticketDAO.getTicket("ABCDEF");
+        assertFalse(ticket.getOutTime().before(ticket.getInTime()));
+        assertEquals(ticket.getPrice(), 0);
         //TODO: check that the fare generated and out time are populated correctly in the database
     }
     	

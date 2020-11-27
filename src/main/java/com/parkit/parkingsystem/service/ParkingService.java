@@ -30,6 +30,7 @@ public class ParkingService {
     public void processIncomingVehicle() {
     	Ticket ticket = new Ticket();
         try{
+        	System.out.println("try");
             ParkingSpot parkingSpot = getNextParkingNumberIfAvailable();
             if(parkingSpot !=null && parkingSpot.getId() > 0){
                 String vehicleRegNumber = getVehichleRegNumber();
@@ -53,6 +54,7 @@ public class ParkingService {
             }
             
         }catch(Exception e){
+        	System.out.println("catch");
             logger.error("Unable to process incoming vehicle",e);
           
         }

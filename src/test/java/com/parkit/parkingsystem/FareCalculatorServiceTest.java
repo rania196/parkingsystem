@@ -3,6 +3,7 @@ package com.parkit.parkingsystem;
 import com.parkit.parkingsystem.constants.Fare;
 import com.parkit.parkingsystem.constants.ParkingType;
 import com.parkit.parkingsystem.dao.TicketDAO;
+import com.parkit.parkingsystem.integration.config.DataBaseTestConfig;
 import com.parkit.parkingsystem.model.ParkingSpot;
 import com.parkit.parkingsystem.model.Ticket;
 import com.parkit.parkingsystem.service.FareCalculatorService;
@@ -22,6 +23,10 @@ public class FareCalculatorServiceTest {
     @BeforeAll
     private static void setUp() {
         fareCalculatorService = new FareCalculatorService();
+        TicketDAO ticketdao = new TicketDAO();
+        ticketdao.dataBaseConfig = new DataBaseTestConfig();
+        
+        
     }
 
     @BeforeEach
@@ -135,11 +140,12 @@ public class FareCalculatorServiceTest {
         ticket.setInTime(inTime);
         ticket.setOutTime(outTime);
         ticket.setParkingSpot(parkingSpot);
-        ticket.setVehicleRegNumber("AGG6543");
+        ticket.setVehicleRegNumber("ABCDEF");
         fareCalculatorService.calculateFare(ticket);
         TicketDAO ticketdao = new TicketDAO();
         ticketdao.saveTicket(ticket);
-        assertEquals(Fare.CAR_RATE_PER_HOUR-(Fare.CAR_RATE_PER_HOUR*0.05), ticket.getPrice() );
+        ticketdao.updateTicket(ticket);
+        assertEquals(Fare.CAR_RATE_PER_HOUR-(Fare.CAR_RATE_PER_HOUR*0.05), ticket.getPrice());
         
     }
     @Test
@@ -152,11 +158,12 @@ public class FareCalculatorServiceTest {
         ticket.setInTime(inTime);
         ticket.setOutTime(outTime);
         ticket.setParkingSpot(parkingSpot);
-        ticket.setVehicleRegNumber("AGG6543");
+        ticket.setVehicleRegNumber("ABCDEF");
         TicketDAO ticketdao = new TicketDAO();
         ticketdao.saveTicket(ticket);
+        ticketdao.getTicket("ABCDEF");
         fareCalculatorService.calculateFare(ticket);
-        assertEquals( Fare.BIKE_RATE_PER_HOUR-(Fare.BIKE_RATE_PER_HOUR*0.05),ticket.getPrice());
+        assertEquals(Fare.BIKE_RATE_PER_HOUR-(Fare.BIKE_RATE_PER_HOUR*0.05),ticket.getPrice());
         
     }
     
@@ -188,5 +195,6 @@ public class FareCalculatorServiceTest {
         fareCalculatorService.calculateFare(ticket);
         assertEquals( (24 * Fare.CAR_RATE_PER_HOUR) , ticket.getPrice());
     }
+    
 
 }
