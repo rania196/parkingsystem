@@ -38,9 +38,9 @@ public class ParkingDataBaseIT {
     @BeforeAll
     private static void setUp() throws Exception{
         parkingSpotDAO = new ParkingSpotDAO();
-        parkingSpotDAO.dataBaseConfig = dataBaseTestConfig;
+        parkingSpotDAO.dataBaseConfig = dataBaseTestConfig; // connection to database
         ticketDAO = new TicketDAO();
-        ticketDAO.dataBaseConfig = dataBaseTestConfig;
+        ticketDAO.dataBaseConfig = dataBaseTestConfig; 
         dataBasePrepareService = new DataBasePrepareService();
     }
 
@@ -58,27 +58,30 @@ public class ParkingDataBaseIT {
 
     @Test
     public void testParkingACar(){
-    	int placeNumber = parkingSpotDAO.getNextAvailableSlot(ParkingType.CAR); // récupére le numéro de place disponible
+    	int placeNumber1 = parkingSpotDAO.getNextAvailableSlot(ParkingType.CAR); // get the available place number
         ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
        parkingService.processIncomingVehicle(); 
-        Ticket ticket =ticketDAO.getTicket("ABCDEF");
         int placeNumber2 = parkingSpotDAO.getNextAvailableSlot(ParkingType.CAR);
-        assertNotEquals(placeNumber2, placeNumber);
-       assertNotNull(ticket.getId());
-       
-        
-        //TODO: check that a ticket is actually saved in DB and Parking table is updated with availability
+        assertNotEquals(placeNumber2, placeNumber1); //Parking table is updated with availability
+        Ticket ticket =ticketDAO.getTicket("ABCDEF");
+       assertNotNull(ticket.getId()); //ticket is actually saved in DB
     }
 
     @Test
     public void testParkingLotExit(){
         testParkingACar();
         ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
+        try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         parkingService.processExitingVehicle();
         Ticket ticket = ticketDAO.getTicket("ABCDEF");
-        assertFalse(ticket.getOutTime().before(ticket.getInTime()));
-        assertEquals(ticket.getPrice(), 0);
-        //TODO: check that the fare generated and out time are populated correctly in the database
+        assertFalse(ticket.getOutTime().before(ticket.getInTime())); //out time is populated correctly in the database
+        assertEquals(ticket.getPrice(), 0);//the fare generated correctly in DB
+        
     }
     	
 }

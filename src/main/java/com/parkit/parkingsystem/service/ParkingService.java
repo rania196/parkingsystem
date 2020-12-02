@@ -30,7 +30,6 @@ public class ParkingService {
     public void processIncomingVehicle() {
     	Ticket ticket = new Ticket();
         try{
-        	System.out.println("try");
             ParkingSpot parkingSpot = getNextParkingNumberIfAvailable();
             if(parkingSpot !=null && parkingSpot.getId() > 0){
                 String vehicleRegNumber = getVehichleRegNumber();
@@ -50,6 +49,9 @@ public class ParkingService {
                 System.out.println("Generated Ticket and saved in DB");
                 System.out.println("Please park your vehicle in spot number:"+parkingSpot.getId());
                 System.out.println("Recorded in-time for vehicle number:"+vehicleRegNumber+" is:"+inTime);
+                if (ticketDAO.checkIfRecurrentUser(vehicleRegNumber)) {
+                	System.out.println("Welcome back recurrent user!");
+                }
                 
             }
             

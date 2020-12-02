@@ -16,20 +16,20 @@ public class FareCalculatorService {
 		}
 
 		long inHour = ticket.getInTime().getTime();
-		long outHour = ticket.getOutTime().getTime();
+		long outHour = ticket.getOutTime().getTime(); // get time in milliseconds 
 
-		// TODO: Some tests are failing here. Need to check if this logic is
-		// correct
+		
 		long duration = outHour - inHour;
-		TimeUnit timeUnitM = TimeUnit.MINUTES; //création d'un objet timeunit qui permet de convertir le temps
+		TimeUnit timeUnitM = TimeUnit.MINUTES; //creation of a timeunit object that allows to convert time
 
 		float durationInHours = (float)timeUnitM.convert(duration, TimeUnit.MILLISECONDS) / (float) 60; // convert minutes to hours
 		if (durationInHours <= 0.5) {
 			ticket.setPrice(0);
-		} else {
-			switch (ticket.getParkingSpot().getParkingType()) {
+		}                    
+		else {
+			switch (ticket.getParkingSpot().getParkingType()) { // get ticket informations
 				case CAR : {
-					ticket.setPrice(durationInHours * Fare.CAR_RATE_PER_HOUR);
+					ticket.setPrice(durationInHours * Fare.CAR_RATE_PER_HOUR); 
 					break;
 				}
 				case BIKE : {
@@ -37,13 +37,15 @@ public class FareCalculatorService {
 					break;
 				}
 				default :
-					throw new IllegalArgumentException("Unkown Parking Type");
+					throw new IllegalArgumentException("Unkown Parking Type"); 
+			}
+			
 			}
 			TicketDAO ticketD = new TicketDAO();
 			if (ticketD.checkIfRecurrentUser(ticket.getVehicleRegNumber()) ) {
-				double reducePrice = ticket.getPrice()- (ticket.getPrice()*0.05);
+				double reducePrice = ticket.getPrice()- (ticket.getPrice()*0.05); // 5% discount for recurrent users
 				ticket.setPrice(reducePrice);
 			}
 		}
 	}
-}
+
